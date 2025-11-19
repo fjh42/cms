@@ -1,5 +1,5 @@
 import json
-from db import Course, User, Assignment, db
+from db import Course, User, Assignment, db, association_table
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -121,10 +121,8 @@ def add_user_to_course(course_id):
     if user is None:
         return failure_response("User not found", 404)
 
-    course.users.append(user)
-
     # Add the user to the course with the specified type
-    stmt = db.association_table.insert().values(user_id=user.id, course_id=course.id, type=user_type)
+    stmt = association_table.insert().values(user_id=user.id, course_id=course.id, type=user_type)
     db.session.execute(stmt)
     db.session.commit()
 
